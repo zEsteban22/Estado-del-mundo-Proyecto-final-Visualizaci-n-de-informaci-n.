@@ -1,8 +1,14 @@
 import plotly.express as px
 import pandas as pd
 import dash
+from dash.dash_table import DataTable
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
+
+# definición de variables para las animaciones
+_año=2015
+_añoFin=2020
+
 #Cargamos los datos
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
 #df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
@@ -11,9 +17,9 @@ df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding
 df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
 
 #Se crean los gráficos                      
-graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==2015],locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país",)
-graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==2015],locations='Code',color='emisiones',hover_name='Entity',color_continuous_scale=["yellow",'blue','red'],title="Grafico de emisiones de CO2 por país",)
-graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==2015],locations='Code',color='emisiones',hover_name='Entity',color_continuous_scale=["white",'yellow','blue'],title="Grafico de emisiones de gases de efecto invernadero  por país",)
+graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==_año],color='Population',locations='Code',height=700,hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país",)
+graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==_año],color='emisiones',locations='Code',height=700,hover_name='Entity',color_continuous_scale=["yellow",'#0015FA','red'],title="Grafico de emisiones de CO2 por país",)
+graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==_año],color='emisiones',hover_name='Entity',locations='Code',height=700,color_continuous_scale=['white','yellow','blue'],title="Grafico de emisiones de gases de efecto invernadero  por país",)
 #                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Esto es para que al inicio solo muestre las poblaciones de 2015
 """Con esto puede ver el excel desde acá
 #print(df_cambioClimatico)
@@ -25,40 +31,72 @@ print(df_poblacion)
 #Se crea la página
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Col([
+    dcc.Interval(id='interval1', interval=0, n_intervals=0),
     html.H1("El Estado del Mundo por año por país.",style={'textAlign': 'center',"marginTop":"20px"}),
     html.Hr(),
     dbc.Row([
-        dbc.Col(html.Button("Play"),width=1),
+        dbc.Col(html.Button("Play",id='play'),width=1),
         dbc.Col(
             dcc.RangeSlider(
                 id='rango_poblacion',
                 min=1970,
-                max=2100,
+                max=2020,
                 step=5,
+                marks={str(year): str(year) for year in range(1970,2025,5)},
                 value=[2015,2020]
             ))]),
-    html.H2("2015",id="año",style={'textAlign': 'center'}),
     dcc.Graph(id='graficoPoblacion',figure=graficoPoblacion),
-    html.P("jaksjkasjfd"),
+    html.P("En este gráfico vemos como China y la India están muy por encima del resto de países del mundo, pero después de ellos se pueden apreciar a ciertos otros países con tonos más intensos que los de sus vecinos, como Estados Unidos, Brasil, Nigeria, Indonesia y Rusia "),
     dcc.Graph(id='graficoCO2',figure=graficoCO2),
-    html.P("jaksjkasjfd"),
+    html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos amarillos y unos cuantos en tonos azules los cuales son: Estados Unidos, Canadá, Emiratos Árabes Unidos, Arabia Saudita, Omán, Kazajistán y Australia. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más emisiones de CO2 percápita del mundo: Qatar"),
     dcc.Graph(id='graficogasesEI',figure=graficogasesEfectoInvernadero),
-    html.P("jaksjkasjfd"),
-],width={"size": 6, "offset": 3})
+    html.P("Con la anterior visualización podemos apreciar cómo China lidera el ranking mundial de emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: Estados Unidos, La India, Rusia y Brazil"),
+],width={"size": 8, "offset": 2})
 
 
-"""
+
 #Se crean los enlaces entre los componentes visuales y los datos visualizados
+
 @app.callback(
-    [Output(component_id='graficoPoblacion', component_property='figure'),
-    Output(component_id='año',component_property='children')],
+    Output(component_id='año',component_property='children'),
     [Input(component_id='rango_poblacion', component_property='value')]
 )
-def actualizarGraficoPoblacion(rango):
+def actualizarRango(rango):
+    _año,_añoFin=rango
+    play=False
+    return str(rango[0])
+
+@app.callback(
+    Output(component_id='interval1',component_property='interval'),
+    Input(component_id='play',component_property='n_clicks'),)
+def iniciarAnimacion(cantidad_clicks):
+    play=True
+    return 5*1000
+@app.callback(
+    Output(component_id='interval1',component_property='interval'),
+    Input(component_id='rango_poblacion',component_property='n_clicks'),)
+def detenerAnimacion(cantidad_clicks):
+    play=True
+    return 5*1000
+
+@app.callback(
+    [
+        Output(component_id='rango_poblacion',component_property="value"),
+        Output(component_id='graficoPoblacion', component_property='figure'),
+    ],
+    [ Input(component_id='interval1',component_property='n_intervals') ]
+    #faltan todos los demás gráficos y hasta el slider
+)
+def ejecutarAnimacion(año):
+    if año >= _añoFin:
+        play=False
+    _año=año
     dff = df_poblacion.copy()
-    dff = dff[dff["Year"].between(rango[0],rango[1])].groupby(['Entity','Code']).mean()
+    ##FALTA ACTUALIZAR LOS OTROS GRÄFICOS
+    dff = dff[dff["Year"].between(año,año+5)].groupby(['Entity','Code']).mean()
     dff.reset_index(inplace=True)
-    return px.choropleth(dff,locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país"),str(rango[0])
-"""
+    return px.choropleth(dff,locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país")
+
+
 if __name__=='__main__':
     app.run_server()
