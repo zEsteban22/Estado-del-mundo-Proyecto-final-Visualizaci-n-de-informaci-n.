@@ -6,12 +6,12 @@ import dash_bootstrap_components as dbc
 #Cargamos los datos
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
 #df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
-df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
-df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
+df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
+df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
 
 #Se crean los gráficos                      
-graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==2015],locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país",)
+graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Año"]==2015],locations='Código',color='Población',hover_name='Entidad',color_continuous_scale='ylorrd',title="Grafico de población por país",)
 graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==2015],locations='Code',color='emisiones',hover_name='Entity',color_continuous_scale=["yellow",'blue','red'],title="Grafico de emisiones de CO2 por país",)
 graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==2015],locations='Code',color='emisiones',hover_name='Entity',color_continuous_scale=["white",'yellow','blue'],title="Grafico de emisiones de gases de efecto invernadero  por país",)
 #                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Esto es para que al inicio solo muestre las poblaciones de 2015
