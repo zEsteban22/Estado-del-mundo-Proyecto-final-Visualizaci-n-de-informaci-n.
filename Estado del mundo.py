@@ -17,9 +17,9 @@ df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding
 df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
 
 #Se crean los gráficos                      
-graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==_año],color='Population',locations='Code',height=700,hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país",)
-graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==_año],color='emisiones',locations='Code',height=700,hover_name='Entity',color_continuous_scale=["yellow",'#0015FA','red'],title="Grafico de emisiones de CO2 por país",)
-graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==_año],color='emisiones',hover_name='Entity',locations='Code',height=700,color_continuous_scale=['white','yellow','blue'],title="Grafico de emisiones de gases de efecto invernadero  por país",)
+graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==2015],locations='Code',color='Población',height=700,hover_name='Entity',color_continuous_scale='ylorrd',title="Grafico de población por país",)
+graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==2015],locations='Code',color='emisiones',height=700,hover_name='Entity',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Grafico de emisiones de CO2 por país",)
+graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==2015],locations='Code',color='emisiones',height=700,hover_name='Entity',color_continuous_scale=["white",'yellow','blue'],title="Grafico de emisiones de gases de efecto invernadero por país",)
 #                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Esto es para que al inicio solo muestre las poblaciones de 2015
 """Con esto puede ver el excel desde acá
 #print(df_cambioClimatico)
@@ -48,7 +48,7 @@ app.layout = dbc.Col([
     dcc.Graph(id='graficoPoblacion',figure=graficoPoblacion),
     html.P("En este gráfico vemos como China y la India están muy por encima del resto de países del mundo, pero después de ellos se pueden apreciar a ciertos otros países con tonos más intensos que los de sus vecinos, como Estados Unidos, Brasil, Nigeria, Indonesia y Rusia "),
     dcc.Graph(id='graficoCO2',figure=graficoCO2),
-    html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos amarillos y unos cuantos en tonos azules los cuales son: Estados Unidos, Canadá, Emiratos Árabes Unidos, Arabia Saudita, Omán, Kazajistán y Australia. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más emisiones de CO2 percápita del mundo: Qatar"),
+    html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos blancos y unos cuantos en tonos oscuros de amarillo los cuales son: Estados Unidos, Canadá, Omán, Kazajistán y Australia. Seguido de ellos, en tonos más azules se encuentran ciertos países árabes como lo son: Arabia Saudita, Emiratos Árabes Unidos y Kuwait, así como uno no árabe y que además se encuentra en América el cual es Trinidad y Tobago. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más emisiones de CO2 percápita del mundo: Qatar"),
     dcc.Graph(id='graficogasesEI',figure=graficogasesEfectoInvernadero),
     html.P("Con la anterior visualización podemos apreciar cómo China lidera el ranking mundial de emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: Estados Unidos, La India, Rusia y Brazil"),
 ],width={"size": 8, "offset": 2})
