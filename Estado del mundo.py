@@ -12,16 +12,21 @@ _añoFin=2020
 
 #Cargamos los datos
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
-#df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
+df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
 df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
 df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
 df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
 
-#Se crean los gráficos                      
-graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==_año],locations='Code',color='Población',height=700,hover_name='Entity',color_continuous_scale='ylorrd',title="Grafico de población por país",)
-graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==_año],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Grafico de Emisiones de CO2 por país",)
-graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==_año],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=["white",'yellow','lightblue','#0015FA'],title="Grafico de Emisiones de gases de efecto invernadero por país",)
-#                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Esto es para que al inicio solo muestre las poblaciones de 2015
+#Se crean los gráficos
+graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Año"]==_año],locations='Código',color='Población',height=700,hover_name='Entidad',color_continuous_scale='ylorrd',title="Gráfico de proyección de población por país")
+
+graficoCO2=px.choropleth(df_CO2[df_CO2["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Gráfico de emisiones de CO2 por país")
+
+graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=["white",'yellow','lightblue','#0015FA'],title="Gráfico de emisiones de gases de efecto invernadero por país")
+
+graficoPrecipitacion=px.scatter_geo(df_precipitaciones[df_precipitaciones["Año"]==_año],locations='Código',height=700,hover_name='Entidad', size='Promedio mensual de precipitación', color='Promedio mensual de precipitación', color_continuous_scale=['lightblue','darkblue'],title="Gráfico de precipitación")
+#^Esto es para que al inicio solo muestre las poblaciones de _año^
+
 """Con esto puede ver el excel desde acá
 #print(df_cambioClimatico)
 #print(df_precipitaciones)
@@ -29,6 +34,7 @@ print(df_CO2)
 print(df_gasesEfectoInvernadero)
 print(df_poblacion)
 """
+
 #Se crea la página
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Col([
@@ -46,18 +52,16 @@ app.layout = dbc.Col([
                 marks={str(year): str(year) for year in range(1970,2025,5)},
                 value=[_año,2020]
             ))]),
-    dcc.Graph(id='graficoPoblacion',figure=graficoPoblacion),
+    dcc.Graph(id='graficoPoblacion', figure=graficoPoblacion),
     html.P("En este gráfico vemos como China y la India están muy por encima del resto de países del mundo, pero después de ellos se pueden apreciar a ciertos otros países con tonos más intensos que los de sus vecinos, como Estados Unidos, Brasil, Nigeria, Indonesia y Rusia "),
-    dcc.Graph(id='graficoCO2',figure=graficoCO2),
-    html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos blancos y unos cuantos en tonos oscuros de amarillo los cuales son: Estados Unidos, Canadá, Omán, Kazajistán y Australia. Seguido de ellos, en tonos más azules se encuentran ciertos países árabes como lo son: Arabia Saudita, Emiratos Árabes Unidos y Kuwait, así como uno no árabe y que además se encuentra en América el cual es Trinidad y Tobago. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más Emisiones de CO2 percápita del mundo: Qatar"),
-    dcc.Graph(id='graficogasesEI',figure=graficogasesEfectoInvernadero),
-    html.P("Con la anterior visualización podemos apreciar cómo China lidera el ranking mundial de Emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: Estados Unidos, La India, Rusia y Brazil"),
+    dcc.Graph(id='graficoCO2', figure=graficoCO2),
+    html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos blancos y unos cuantos en tonos oscuros de amarillo los cuales son: Estados Unidos, Canadá, Omán, Kazajistán y Australia. Seguido de ellos, en tonos más azules se encuentran ciertos países árabes como lo son: Arabia Saudita, Emiratos Árabes Unidos y Kuwait, así como uno no árabe y que además se encuentra en América el cual es Trinidad y Tobago. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más emisiones de CO2 percápita del mundo: Qatar"),
+    dcc.Graph(id='graficogasesEI', figure=graficogasesEfectoInvernadero),
+    html.P("Con la anterior visualización podemos apreciar cómo China lidera el ranking mundial de emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: Estados Unidos, La India, Rusia y Brazil"),
+    dcc.Graph(id='graficoPrecipitaciones', figure=graficoPrecipitacion)
 ],width={"size": 8, "offset": 2})
 
-
-
 #Se crean los enlaces entre los componentes visuales y los datos visualizados
-
 @app.callback(
     Output(component_id='interval1',component_property='interval'),
     [Input(component_id='rango_poblacion', component_property='value')]
@@ -95,7 +99,6 @@ def ejecutarAnimacion(n_interval):
     dff = dff[dff["Year"].between(_año,_año+5)].groupby(['Entity','Code']).mean()
     dff.reset_index(inplace=True)
     return (5000 if _año + 5 >= _añoFin else inf), [_año,_añoFin], px.choropleth(dff,locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país")
-
 
 if __name__=='__main__':
     app.run_server()
