@@ -1,3 +1,4 @@
+from math import inf
 import plotly.express as px
 import pandas as pd
 import dash
@@ -6,7 +7,7 @@ from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 
 # definición de variables para las animaciones
-_año=2015
+_año=1990
 _añoFin=2020
 
 #Cargamos los datos
@@ -17,9 +18,9 @@ df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding
 df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
 
 #Se crean los gráficos                      
-graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==2015],locations='Code',color='Población',height=700,hover_name='Entity',color_continuous_scale='ylorrd',title="Grafico de población por país",)
-graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==2015],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Grafico de Emisiones de CO2 por país",)
-graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==2015],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=["white",'yellow','lightblue','#0015FA'],title="Grafico de Emisiones de gases de efecto invernadero por país",)
+graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Year"]==_año],locations='Code',color='Población',height=700,hover_name='Entity',color_continuous_scale='ylorrd',title="Grafico de población por país",)
+graficoCO2=px.choropleth(df_CO2[df_CO2["Year"]==_año],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Grafico de Emisiones de CO2 por país",)
+graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Year"]==_año],locations='Code',color='Emisiones',height=700,hover_name='Entity',color_continuous_scale=["white",'yellow','lightblue','#0015FA'],title="Grafico de Emisiones de gases de efecto invernadero por país",)
 #                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ Esto es para que al inicio solo muestre las poblaciones de 2015
 """Con esto puede ver el excel desde acá
 #print(df_cambioClimatico)
@@ -31,7 +32,7 @@ print(df_poblacion)
 #Se crea la página
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = dbc.Col([
-    dcc.Interval(id='interval1', interval=0, n_intervals=0),
+    dcc.Interval(id='interval1', interval=0, n_intervals=inf),
     html.H1("El Estado del Mundo por año por país.",style={'textAlign': 'center',"marginTop":"20px"}),
     html.Hr(),
     dbc.Row([
@@ -39,11 +40,11 @@ app.layout = dbc.Col([
         dbc.Col(
             dcc.RangeSlider(
                 id='rango_poblacion',
-                min=1970,
+                min=1990,
                 max=2020,
                 step=5,
                 marks={str(year): str(year) for year in range(1970,2025,5)},
-                value=[2015,2020]
+                value=[_año,2020]
             ))]),
     dcc.Graph(id='graficoPoblacion',figure=graficoPoblacion),
     html.P("En este gráfico vemos como China y la India están muy por encima del resto de países del mundo, pero después de ellos se pueden apreciar a ciertos otros países con tonos más intensos que los de sus vecinos, como Estados Unidos, Brasil, Nigeria, Indonesia y Rusia "),
@@ -58,44 +59,42 @@ app.layout = dbc.Col([
 #Se crean los enlaces entre los componentes visuales y los datos visualizados
 
 @app.callback(
-    Output(component_id='año',component_property='children'),
+    Output(component_id='interval1',component_property='interval'),
     [Input(component_id='rango_poblacion', component_property='value')]
 )
 def actualizarRango(rango):
     _año,_añoFin=rango
+    print(rango)
     play=False
-    return str(rango[0])
+    return inf
 
 @app.callback(
     Output(component_id='interval1',component_property='interval'),
     Input(component_id='play',component_property='n_clicks'),)
 def iniciarAnimacion(cantidad_clicks):
-    play=True
-    return 5*1000
-@app.callback(
-    Output(component_id='interval1',component_property='interval'),
-    Input(component_id='rango_poblacion',component_property='n_clicks'),)
-def detenerAnimacion(cantidad_clicks):
+    print("iniciar")
     play=True
     return 5*1000
 
+
 @app.callback(
     [
+        Output(component_id='interval1',component_property='interval'),
         Output(component_id='rango_poblacion',component_property="value"),
         Output(component_id='graficoPoblacion', component_property='figure'),
     ],
     [ Input(component_id='interval1',component_property='n_intervals') ]
     #faltan todos los demás gráficos y hasta el slider
 )
-def ejecutarAnimacion(año):
-    if año >= _añoFin:
-        play=False
-    _año=año
+def ejecutarAnimacion(n_interval):
+    global _año
+    print("hola")    
+    _año+=5
     dff = df_poblacion.copy()
     ##FALTA ACTUALIZAR LOS OTROS GRÄFICOS
-    dff = dff[dff["Year"].between(año,año+5)].groupby(['Entity','Code']).mean()
+    dff = dff[dff["Year"].between(_año,_año+5)].groupby(['Entity','Code']).mean()
     dff.reset_index(inplace=True)
-    return px.choropleth(dff,locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país")
+    return (5000 if _año + 5 >= _añoFin else inf), [_año,_añoFin], px.choropleth(dff,locations='Code',color='Population',hover_name='Entity',color_continuous_scale=["lightblue",'darkblue'],title="Grafico de población por país")
 
 
 if __name__=='__main__':
