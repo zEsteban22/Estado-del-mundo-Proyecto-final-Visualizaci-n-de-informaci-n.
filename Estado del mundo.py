@@ -59,7 +59,7 @@ app.layout = dbc.Col([
     [Input(component_id='rango_poblacion', component_property='value')]
 )
 def actualizarRango(rango):
-    return str(rango[0]),generarGraficos(rango[0])
+    return str(rango[0]),*generarGraficos(rango[0])
 
 if __name__=='__main__':
     app.run_server()
