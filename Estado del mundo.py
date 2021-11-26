@@ -11,18 +11,26 @@ _año=1990
 _añoFin=2020
 
 #Cargamos los datos
+#Datos Esteban
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
-df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
-df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
-df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
+#df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
+#df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
+#df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+#df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
+
+#Datos Renzo
+#df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
+df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
+df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
+df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
 
 #Se crean los gráficos
 graficoPoblacion=px.choropleth(df_poblacion[df_poblacion["Año"]==_año],locations='Código',color='Población',height=700,hover_name='Entidad',color_continuous_scale='ylorrd',title="Gráfico de proyección de población por país")
 
-graficoCO2=px.choropleth(df_CO2[df_CO2["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['white',"yellow",'#0015FA','red'],title="Gráfico de emisiones de CO2 por país")
+graficoCO2=px.choropleth(df_CO2[df_CO2["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['green',"yellow",'orange','red'],title="Gráfico de emisiones de CO2 per cápita por país")
 
-graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=["white",'yellow','lightblue','#0015FA'],title="Gráfico de emisiones de gases de efecto invernadero por país")
+graficogasesEfectoInvernadero=px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"]==_año],locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['green',"yellow",'orange','red'],title="Gráfico de emisiones totales de gases de efecto invernadero por país")
 
 graficoPrecipitacion=px.scatter_geo(df_precipitaciones[df_precipitaciones["Año"]==_año],locations='Código',height=700,hover_name='Entidad', size='Promedio mensual de precipitación', color='Promedio mensual de precipitación', color_continuous_scale=['lightblue','darkblue'],title="Gráfico de precipitación")
 #^Esto es para que al inicio solo muestre las poblaciones de _año^
