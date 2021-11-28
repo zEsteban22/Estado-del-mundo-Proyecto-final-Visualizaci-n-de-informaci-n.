@@ -56,14 +56,14 @@ def generarGraficos(año):
             height=700,
             hover_name='Entidad',
             color_continuous_scale=['green',"yellow",'orange','red'],
-            title="Gráfico de emisiones de CO2 por país"),\
+            title="Gráfico de emisiones de CO2 per cápita por país"),\
         px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),
             locations='Código',
             color='Emisiones',
             height=700,
             hover_name='Entidad',
             color_continuous_scale=['green',"yellow",'orange','red'],
-            title="Gráfico de emisiones de gases de efecto invernadero por país"),\
+            title="Gráfico de emisiones totales de gases de efecto invernadero por país"),\
         px.scatter_geo(df_precipitaciones[df_precipitaciones["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),
             locations='Código',
             height=700,
