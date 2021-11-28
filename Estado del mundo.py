@@ -10,6 +10,14 @@ _año=1990
 _añoFin=2020
 
 #Cargamos los datos
+
+#Datos Renzo
+#df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
+df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
+df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
+df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
+
 #Datos Esteban
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
 #df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
@@ -17,20 +25,38 @@ _añoFin=2020
 #df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
 #df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
 
-#Datos Renzo
-#df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
-df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
-df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
-df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
-
 #Se crean los gráficos
 def generarGraficos(año):
-    return \
-        px.choropleth(df_poblacion[df_poblacion["Año"]==año],locations='Código',color='Población',height=700,hover_name='Entidad',color_continuous_scale='ylorrd',title="Gráfico de proyección de población por país"),\
-        px.choropleth(df_CO2[df_CO2["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['green',"yellow",'orange','red'],title="Gráfico de emisiones de CO2 por país"),\
-        px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),locations='Código',color='Emisiones',height=700,hover_name='Entidad',color_continuous_scale=['green',"yellow",'orange','red'],title="Gráfico de emisiones de gases de efecto invernadero por país"),\
-        px.scatter_geo(df_precipitaciones[df_precipitaciones["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),locations='Código',height=700,hover_name='Entidad', size='Promedio mensual de precipitación', color='Promedio mensual de precipitación', color_continuous_scale=['lightblue','darkblue'],title="Gráfico de precipitación"),\
+    return\
+        px.choropleth(df_poblacion[df_poblacion["Año"]==año],
+            locations='Código',
+            color='Población',
+            height=700,
+            hover_name='Entidad',
+            color_continuous_scale='ylorrd',
+            title="Gráfico de proyección de población por país"),\
+        px.choropleth(df_CO2[df_CO2["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),
+            locations='Código',
+            color='Emisiones',
+            height=700,
+            hover_name='Entidad',
+            color_continuous_scale=['green',"yellow",'orange','red'],
+            title="Gráfico de emisiones de CO2 por país"),\
+        px.choropleth(df_gasesEfectoInvernadero[df_gasesEfectoInvernadero["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),
+            locations='Código',
+            color='Emisiones',
+            height=700,
+            hover_name='Entidad',
+            color_continuous_scale=['green',"yellow",'orange','red'],
+            title="Gráfico de emisiones de gases de efecto invernadero por país"),\
+        px.scatter_geo(df_precipitaciones[df_precipitaciones["Año"].between(año-2,año+3)].groupby(['Entidad','Código']).mean().reset_index(),
+            locations='Código',
+            height=700,
+            hover_name='Entidad',
+            size='Promedio mensual de precipitación',
+            color='Promedio mensual de precipitación',
+            color_continuous_scale=['lightblue','darkblue'],
+            title="Gráfico de precipitación"),\
 
 #Se crea la página
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -45,7 +71,7 @@ app.layout = dbc.Col([
                 marks={str(year): str(year) for year in range(1970,2025,5)},
                 value=[_año,_año]
             ),
-    html.H2("1990",id="año",style={'textAlign': 'center',"marginTop":"20px"}),
+    html.H2("1990", id="año", style={'textAlign': 'center',"marginTop":"20px"}),
     dcc.Graph(id='graficoPoblacion'),
     html.P("En este gráfico vemos como China y la India están muy por encima del resto de países del mundo, pero después de ellos se pueden apreciar a ciertos otros países con tonos más intensos que los de sus vecinos, como Estados Unidos, Brasil, Nigeria, Indonesia y Rusia "),
     dcc.Graph(id='graficoCO2'),
