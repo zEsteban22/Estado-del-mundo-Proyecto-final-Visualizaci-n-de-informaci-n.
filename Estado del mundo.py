@@ -78,7 +78,15 @@ def generarGraficos(año):
             x='CO2 per cápita',
             y='Gases de efecto invernadero',
             height=700,
-            hover_name='Entidad')
+            hover_name='Entidad')#,\
+        #px.scatter(df_cambioClimatico[df_cambioClimatico['Día'].between_time(año-2,año+3)]['temperature_anomaly'].mean(),
+        #    size=df_cambioClimatico[df_cambioClimatico['Día'].between_time(año-2,año+3)],
+        #    color='temperature_anomaly',
+        #    x='Día',
+        #    y='temperature_anomaly',
+        #    height=700,
+        #    hover_name='Entidad'
+        #)
 
 #Se crea la página
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
