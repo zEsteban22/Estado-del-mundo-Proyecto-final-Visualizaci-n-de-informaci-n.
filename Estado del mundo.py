@@ -14,21 +14,21 @@ listaPaisesInvisibles=[]
 #Cargamos los datos
 
 #Datos Renzo
-df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
-df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
-df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
-df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
-df_continentes=pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/6_paises-por-continente.xlsx')
+#df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
+#df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
+#df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
+#df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+#df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
+#df_continentes=pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/6_paises-por-continente.xlsx')
 
 
 #Datos Esteban
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
-#df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
-#df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
-#df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-#df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
-#df_continentes=pd.read_excel('Datos/6_paises-por-continente.xlsx')
+df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
+df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
+df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
+df_continentes=pd.read_excel('Datos/6_paises-por-continente.xlsx')
 df_continentes.ISO=df_continentes.ISO.apply(str).str.strip()
 df_continentes.Continente=df_continentes.Continente.apply(str).str.strip()
 
