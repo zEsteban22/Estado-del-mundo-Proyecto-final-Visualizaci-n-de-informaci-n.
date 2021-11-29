@@ -14,19 +14,21 @@ listaPaisesInvisibles=[]
 #Cargamos los datos
 
 #Datos Renzo
-#df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
-#df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
-#df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
-#df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-#df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
+df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
+df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
+df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
+df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/5_future-population-projections-by-country.xlsx')
+df_continentes=pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/6_paises-por-continente.xlsx')
+
 
 #Datos Esteban
 #df_cambioClimatico = pd.read_excel('Datos/1_climate-change.xlsx')
-df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
-df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
-df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
-df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
-df_continentes=pd.read_excel('Datos/6_paises-por-continente.xlsx')
+#df_precipitaciones = pd.read_excel('Datos/2_average-monthly-precipitation.xlsx')
+#df_CO2 = pd.read_excel('Datos/3_co-emissions-per-capita.xlsx')
+#df_gasesEfectoInvernadero = pd.read_excel('Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
+#df_poblacion = pd.read_excel('Datos/5_future-population-projections-by-country.xlsx')
+#df_continentes=pd.read_excel('Datos/6_paises-por-continente.xlsx')
 df_continentes.ISO=df_continentes.ISO.apply(str).str.strip()
 df_continentes.Continente=df_continentes.Continente.apply(str).str.strip()
 
@@ -34,8 +36,8 @@ df_continentes.Continente=df_continentes.Continente.apply(str).str.strip()
 
 df_universal=pd.DataFrame([ 
     {#                                                _.-=/ Esta parte es para sacar los registros en un rango de 5 años \=-._                _.-=/ Aquí se hace el pegue por código \=-._                 v Para finalmente sacar el promedio del indicador
-        'gasesEIPercap':df_gasesEfectoInvernadero[df_gasesEfectoInvernadero['Año'].between(registro_poblacion['Año']-4,registro_poblacion['Año'])][df_gasesEfectoInvernadero['Código']==registro_poblacion['Código']]['Emisiones'].mean()/registro_poblacion['Población'],
-        'CO2Percap':df_CO2[df_CO2['Año'].between(registro_poblacion['Año']-4,registro_poblacion['Año'])][df_CO2['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
+        'Gases de efecto invernadero':df_gasesEfectoInvernadero[df_gasesEfectoInvernadero['Año'].between(registro_poblacion['Año']-4,registro_poblacion['Año'])][df_gasesEfectoInvernadero['Código']==registro_poblacion['Código']]['Emisiones'].mean()/registro_poblacion['Población'],
+        'Emisiones de CO2 per cápita':df_CO2[df_CO2['Año'].between(registro_poblacion['Año']-4,registro_poblacion['Año'])][df_CO2['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
         'Precipitaciones':df_precipitaciones[df_precipitaciones['Año'].between(registro_poblacion['Año']-4,registro_poblacion['Año'])][df_precipitaciones['Código']==registro_poblacion['Código']]['Promedio mensual de precipitación'].mean(),
         'Año': registro_poblacion['Año'], 
         'Entidad': registro_poblacion['Entidad'], 
@@ -61,14 +63,14 @@ def generarGraficos(año):
             title="Gráfico de proyección de población por país"),\
         px.choropleth(df_temp,
             locations='Código',
-            color='CO2Percap',
+            color='Emisiones de CO2 per cápita',
             height=700,
             hover_name='Entidad',
             color_continuous_scale=['green',"yellow",'orange','red'],
             title="Gráfico de emisiones de CO2 por país"),\
         px.choropleth(df_temp,
             locations='Código',
-            color='gasesEIPercap',
+            color='Gases de efecto invernadero',
             height=700,
             hover_name='Entidad',
             color_continuous_scale=['green',"yellow",'orange','red'],
@@ -80,7 +82,15 @@ def generarGraficos(año):
             size='Precipitaciones',
             color='Continente',
             title="Gráfico de precipitación"),\
-        *otrosGraficos(df_temp)
+        *otrosGraficos(df_temp)#,\
+        #px.scatter(df_cambioClimatico[df_cambioClimatico['Día'].between_time(año-2,año+3)]['temperature_anomaly'].mean(),
+        #    size=df_cambioClimatico[df_cambioClimatico['Día'].between_time(año-2,año+3)],
+        #    color='temperature_anomaly',
+        #    x='Día',
+        #    y='temperature_anomaly',
+        #    height=700,
+        #    hover_name='Entidad'
+        #)
 def otrosGraficos(df_temp=None):
     if not isinstance(df_temp,pd.DataFrame):
         df_temp=df_universal[df_universal['Año']==_año]
@@ -89,13 +99,13 @@ def otrosGraficos(df_temp=None):
         px.scatter(df_temp[df_temp['Entidad'].isin(listaPaisesVisibles)],
             size='Población',
             color='Continente',
-            x='CO2Percap',
-            y='gasesEIPercap',
+            x='Emisiones de CO2 per cápita',
+            y='Gases de efecto invernadero',
             height=700,
             size_max=100,
             hover_name='Entidad'),\
         px.parallel_coordinates(df_temp[df_temp['Entidad'].isin(listaPaisesVisibles)],
-            dimensions=['Población','CO2Percap','gasesEIPercap','Precipitaciones'],
+            dimensions=['Población','Emisiones de CO2 per cápita','Gases de efecto invernadero','Precipitaciones'],
             height=700,
             color='contColor',
             color_continuous_scale=[(0.0, "red"),(1/5, "red"),
