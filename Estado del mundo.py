@@ -139,7 +139,7 @@ app.layout = dbc.Col([
     dcc.Graph(id='graficoCO2'),
     html.P("En el gráfico anterior se puede apreciar una mayoría de países en tonos blancos y unos cuantos en tonos oscuros de amarillo los cuales son: Estados Unidos, Canadá, Omán, Kazajistán y Australia. Seguido de ellos, en tonos más azules se encuentran ciertos países árabes como lo son: Arabia Saudita, Emiratos Árabes Unidos y Kuwait, así como uno no árabe y que además se encuentra en América el cual es Trinidad y Tobago. Pero además casi imperseptible a simple vista debido a su pequeño territorio está el país con más emisiones de CO2 percápita del mundo: Qatar"),
     dcc.Graph(id='graficogasesEI'),
-    html.P("Con la anterior visualización podemos apreciar cómo China lidera el ranking mundial de emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: Estados Unidos, La India, Rusia y Brazil"),
+    html.P("Con la anterior visualización podemos apreciar cómo Estados Unidos lidera el ranking mundial de emisiones de gases de efecto invernadero, teniendo además ciertos países que le siguen relativamente de cerca: China, La India, Rusia y Brazil"),
     dcc.Graph(id='graficoPrecipitaciones'),
     html.P("Los países que se van a visualizar en los siguientes gráficos con los siguientes: "),
     html.P(id='paisesListados',children=mostrarPaises()),
