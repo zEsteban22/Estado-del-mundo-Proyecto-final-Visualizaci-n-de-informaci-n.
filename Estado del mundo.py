@@ -12,7 +12,7 @@ _añoFin=2020
 #Cargamos los datos
 
 #Datos Renzo
-#df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
+df_cambioClimatico = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/1_climate-change.xlsx')
 df_precipitaciones = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/2_average-monthly-precipitation.xlsx')
 df_CO2 = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/3_co-emissions-per-capita.xlsx')
 df_gasesEfectoInvernadero = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado-del-mundo-Proyecto-final-Visualizacion-de-informacion/Datos/4_total-ghg-emissions-excluding-lufc.xlsx')
@@ -28,8 +28,8 @@ df_poblacion = pd.read_excel('C:/Users/Renzo/Documents/VS Code Repository/Estado
 #Para hacer el gráfico de dispersión con todos los datos, se deben meter todos los datos en un mismo dataframe
 df_universal=pd.DataFrame([ 
     {#                                                _.-=/ Esta parte es para sacar los registros en un rango de 5 años \=-._                _.-=/ Aquí se hace el pegue por código \=-._                 v Para finalmente sacar el promedio del indicador
-        'gasesEI':df_gasesEfectoInvernadero[df_gasesEfectoInvernadero['Año'].between(registro_poblacion['Año']-2,registro_poblacion['Año']+3)][df_gasesEfectoInvernadero['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
-        'CO2Percap':df_CO2[df_CO2['Año'].between(registro_poblacion['Año']-2,registro_poblacion['Año']+3)][df_CO2['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
+        'Gases de efecto invernadero':df_gasesEfectoInvernadero[df_gasesEfectoInvernadero['Año'].between(registro_poblacion['Año']-2,registro_poblacion['Año']+3)][df_gasesEfectoInvernadero['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
+        'CO2 per cápita':df_CO2[df_CO2['Año'].between(registro_poblacion['Año']-2,registro_poblacion['Año']+3)][df_CO2['Código']==registro_poblacion['Código']]['Emisiones'].mean(),
         'Precipitaciones':df_precipitaciones[df_precipitaciones['Año'].between(registro_poblacion['Año']-2,registro_poblacion['Año']+3)][df_precipitaciones['Código']==registro_poblacion['Código']]['Promedio mensual de precipitación'].mean(),
         'Año': registro_poblacion['Año'], 
         'Entidad': registro_poblacion['Entidad'], 
@@ -75,8 +75,8 @@ def generarGraficos(año):
         px.scatter(df_universal[df_universal['Año']==año],
             size='Precipitaciones',
             color='Población',
-            x='CO2Percap',
-            y='gasesEI',
+            x='CO2 per cápita',
+            y='Gases de efecto invernadero',
             height=700,
             hover_name='Entidad')
 
